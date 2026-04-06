@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <div class="card glass-card shadow-sm border-0">
+            <div class="card-header bg-primary text-white text-center py-3">
+                <i class="fas fa-file-signature fa-2x mb-2"></i>
+                <h4>Post a New Job</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Job Title</label>
+                        <input type="text" name="title" class="form-control" required placeholder="e.g., Senior Software Engineer">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Location</label>
+                        <input type="text" name="location" class="form-control" placeholder="e.g., Remote, New York">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Job Description</label>
+                        <textarea name="description" class="form-control" rows="5" required placeholder="Describe the responsibilities and requirements..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Required Skills</label>
+                        <textarea name="required_skills" class="form-control" rows="3" required placeholder="e.g., Python, Django, React, SQL (separated by commas)"></textarea>
+                        <div class="form-text mt-2"><i class="fas fa-info-circle"></i> These skills are crucial for the AI parsing engine to calculate an accurate candidate score!</div>
+                    </div>
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-success btn-lg fw-bold"><i class="fas fa-paper-plane"></i> Publish Job</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

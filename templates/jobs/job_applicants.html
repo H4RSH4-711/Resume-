@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="mb-4 text-center">
+    <h2><i class="fas fa-users text-primary"></i> Applicants for {{ job.title }}</h2>
+    <p class="text-muted"><i class="fas fa-map-marker-alt text-danger"></i> {{ job.location }}</p>
+    <a href="{% url 'jobs:recruiter_dashboard' %}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+</div>
+
+<div class="card glass-card shadow-sm border-0">
+    <div class="card-body p-0">
+        <ul class="list-group list-group-flush">
+            {% for app in applications %}
+            <li class="list-group-item p-4 d-flex justify-content-between align-items-center flex-wrap">
+                <div class="mb-3 mb-md-0">
+                    <h5 class="fw-bold mb-1">{{ app.candidate.first_name }} {{ app.candidate.last_name }} <span class="text-muted small">({{ app.candidate.email }})</span></h5>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="badge {% if app.match_score >= 70 %}bg-success{% elif app.match_score >= 40 %}bg-warning text-dark{% else %}bg-danger{% endif %} py-2 px-3 fs-6 rounded-pill">
+                            <i class="fas fa-crosshairs"></i> AI Match Score: {{ app.match_score|floatformat:1 }}%
+                        </span>
+                        <span class="badge bg-secondary">Status: {{ app.status }}</span>
+                    </div>
+                    <div class="mt-2 text-muted small">Applied: {{ app.applied_at|date:"M d, Y" }}</div>
+                </div>
+                <div class="d-flex gap-2 align-items-center">
+                    {% if app.resume and app.resume.file %}
+                    <a href="{{ app.resume.file.url }}" target="_blank" class="btn btn-outline-info text-dark fw-bold"><i class="fas fa-file-pdf text-danger"></i> View Resume</a>
+                    {% endif %}
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton{{ app.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                            Update Status
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="dropdownMenuButton{{ app.id }}">
+                            <li><a class="dropdown-item text-warning fw-bold" href="{% url 'jobs:update_application_status' app.id 'Pending' %}">Pending</a></li>
+                            <li><a class="dropdown-item text-success fw-bold" href="{% url 'jobs:update_application_status' app.id 'Shortlisted' %}"><i class="fas fa-check"></i> Shortlist</a></li>
+                            <li><a class="dropdown-item text-danger fw-bold" href="{% url 'jobs:update_application_status' app.id 'Rejected' %}"><i class="fas fa-times"></i> Reject</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            {% empty %}
+            <li class="list-group-item p-5 text-center text-muted">
+                <i class="fas fa-ghost fa-3x mb-3 text-secondary"></i>
+                <h5 class="fw-bold">No applicants yet.</h5>
+                <p>Check back later or promote your job posting to get candidates!</p>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
